@@ -14,6 +14,8 @@ add_library(
     library_core 
     src/Book.cpp
     src/User.cpp
+    src/Library.cpp
+    src/LoanManager.cpp
 )
 
 target_include_directories(
@@ -21,3 +23,10 @@ target_include_directories(
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
+
+add_executable(
+    library_app
+    src/main.cpp
+)
+
+target_link_libraries(library_app library_core)

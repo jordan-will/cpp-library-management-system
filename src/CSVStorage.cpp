@@ -1,6 +1,7 @@
 #include "CSVStorage.h"
 #include "Book.h"
 #include "User.h"
+#include "StringUtils.h"
 
 #include <fstream>
 #include <sstream>
@@ -18,9 +19,10 @@ void CSVStorage::saveBooks(const std::vector<Book>& books){
     }
 
     for(const auto& book: books){
-        file << book.getTitle() << ", "
-        << book.getAuthor() << ", "
-        << book.getIsbn() << ", "
+        file << book.getTitle() << ","
+        << book.getAuthor() << ","
+        << book.getIsbn() << ","
+        << book.getYear() << ","
         << book.isAvailable() 
         << "\n"; 
     }
@@ -40,6 +42,10 @@ std::vector<Book> CSVStorage::loadBooks(){
 
     while(std::getline(file, line)){
 
+        if(line.empty()) {
+            continue;
+        }
+
         std::stringstream ss(line);
 
         std::string title;
@@ -52,7 +58,18 @@ std::vector<Book> CSVStorage::loadBooks(){
         std::getline(ss, author, ',');
         std::getline(ss, isbn, ',');
         std::getline(ss, yearStr, ',');
-        std::getline(ss, availableStr, ',');
+        std::getline(ss, availableStr);
+
+        utils::trim(yearStr);
+        utils::trim(availableStr);
+
+        if(yearStr.empty() || availableStr.empty()){
+            continue;
+        }
+
+        if(yearStr.empty() || availableStr.empty()){
+            continue;
+        }
 
         int year = std::stoi(yearStr);
         bool available = std::stoi(availableStr);
@@ -100,6 +117,10 @@ std::vector<User> CSVStorage::loadUsers(){
 
     while(std::getline(file, line)){
 
+        if(line.empty()) {
+            continue;
+        }
+
         std::stringstream ss(line);
 
         std::string idStr;
@@ -108,7 +129,7 @@ std::vector<User> CSVStorage::loadUsers(){
 
         std::getline(ss, idStr, ',');
         std::getline(ss, name, ',');
-        std::getline(ss, email, ',');
+        std::getline(ss, email);
 
         int id = std::stoi(idStr);
 

@@ -1,5 +1,10 @@
 #include "Library.h"
+#include "Storage.h"
+
 #include <stdexcept>
+#include <vector>
+
+Library::Library(Storage& storage): storage(storage){}
 
 void Library::addBook(const Book& book){
     std::string isbn = book.getIsbn();
@@ -44,4 +49,33 @@ User&Library::getUser(int id){
 
 bool Library::hasUser(int id) const{
     return users.find(id) != users.end();
+}
+
+void Library::load(){
+    auto loadedBooks = storage.loadBooks();
+    auto loadedUsers = storage.loadUsers();
+
+    for(const auto& book : loadedBooks){
+        books.emplace(book.getIsbn(), book);
+    }
+
+    for(const auto& user: loadedUsers){
+        users.emplace(user.getId(), user);
+    }
+}
+
+void Library::save(){
+    std::vector<Book> bookList;
+    std::vector<User> userList;
+
+    for(const auto& pair : books){
+        bookList.push_back(pair.second);
+    }
+
+    for(const auto& pair : users){
+        userList.push_back(pair.second);
+    }
+
+    storage.saveBooks(bookList);
+    storage.saveUsers(userList);
 }

@@ -20,7 +20,7 @@ const std::string& User::getEmail() const{
 }
 
 const std::string& User::getName() const {
-    return email;
+    return name;
 } 
 
 //setters

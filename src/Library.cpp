@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-Library::Library(Storage& storage): storage(storage){}
+Library::Library(Storage& storage): storage(storage), nextUserId(1){}
 
 void Library::addBook(const Book& book){
     std::string isbn = book.getIsbn();
@@ -54,6 +54,7 @@ bool Library::hasUser(int id) const{
 void Library::load(){
     auto loadedBooks = storage.loadBooks();
     auto loadedUsers = storage.loadUsers();
+    nextUserId = loadedUsers.size() + 1;
 
     for(const auto& book : loadedBooks){
         books.emplace(book.getIsbn(), book);
@@ -78,4 +79,16 @@ void Library::save(){
 
     storage.saveBooks(bookList);
     storage.saveUsers(userList);
+}
+
+const std::unordered_map<std::string, Book>& Library::getAllBooks() const{
+    return books;
+}
+
+const std::unordered_map<int, User>& Library::getAllUsers() const {
+    return users;
+}
+
+int Library::generateUserId(){
+    return nextUserId++;
 }

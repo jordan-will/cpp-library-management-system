@@ -18,6 +18,7 @@ add_library(
     src/LoanManager.cpp
     src/CSVStorage.cpp
     src/Storage.cpp
+    src/App.cpp
 )
 
 target_include_directories(
